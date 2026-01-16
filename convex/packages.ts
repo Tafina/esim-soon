@@ -363,7 +363,7 @@ export const getPackagesByCodesInternal = internalQuery({
   },
 });
 
-// Internal mutation to upsert a package
+// Internal mutation to upsert a package (kept for backwards compatibility)
 export const upsertPackage = internalMutation({
   args: {
     packageCode: v.string(),
@@ -399,7 +399,7 @@ export const upsertPackage = internalMutation({
   },
 });
 
-// Internal mutation to upsert a country
+// Internal mutation to upsert a country (kept for backwards compatibility)
 export const upsertCountry = internalMutation({
   args: {
     code: v.string(),
@@ -422,5 +422,100 @@ export const upsertCountry = internalMutation({
     }
 
     return await ctx.db.insert("countries", args);
+  },
+});
+
+// BATCH mutation to upsert multiple packages at once (much more efficient!)
+export const upsertPackagesBatch = internalMutation({
+  args: {
+    packages: v.array(
+      v.object({
+        packageCode: v.string(),
+        name: v.string(),
+        locationCode: v.string(),
+        locationName: v.string(),
+        price: v.number(),
+        retailPrice: v.number(),
+        currencyCode: v.string(),
+        volume: v.number(),
+        duration: v.number(),
+        activeType: v.string(),
+        description: v.optional(v.string()),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    let inserted = 0;
+    let updated = 0;
+
+    for (const pkg of args.packages) {
+      const existing = await ctx.db
+        .query("packages")
+        .withIndex("by_packageCode", (q) => q.eq("packageCode", pkg.packageCode))
+        .first();
+
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          ...pkg,
+          lastSynced: now,
+        });
+        updated++;
+      } else {
+        await ctx.db.insert("packages", {
+          ...pkg,
+          lastSynced: now,
+        });
+        inserted++;
+      }
+    }
+
+    return { inserted, updated };
+  },
+});
+
+// BATCH mutation to upsert multiple countries at once (much more efficient!)
+export const upsertCountriesBatch = internalMutation({
+  args: {
+    countries: v.array(
+      v.object({
+        code: v.string(),
+        name: v.string(),
+        region: v.string(),
+        flagEmoji: v.string(),
+        minPrice: v.optional(v.number()),
+        packageCount: v.optional(v.number()),
+        popular: v.optional(v.boolean()),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+    let updated = 0;
+
+    for (const country of args.countries) {
+      const existing = await ctx.db
+        .query("countries")
+        .withIndex("by_code", (q) => q.eq("code", country.code))
+        .first();
+
+      if (existing) {
+        // Don't overwrite custom fields like customName, slug, description, includedCountries
+        await ctx.db.patch(existing._id, {
+          name: country.name,
+          region: country.region,
+          flagEmoji: country.flagEmoji,
+          minPrice: country.minPrice,
+          packageCount: country.packageCount,
+          popular: country.popular,
+        });
+        updated++;
+      } else {
+        await ctx.db.insert("countries", country);
+        inserted++;
+      }
+    }
+
+    return { inserted, updated };
   },
 });

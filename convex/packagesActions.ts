@@ -317,6 +317,19 @@ function getCountryInfo(code: string, name?: string): { name: string; region: st
   };
 }
 
+// ============= Helper: Chunk array into batches =============
+
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+// Batch size for mutations (to avoid hitting Convex limits)
+const BATCH_SIZE = 100;
+
 // ============= Action =============
 
 export const syncPackages = action({
@@ -329,6 +342,21 @@ export const syncPackages = action({
 
     const countryPrices: Record<string, { minPrice: number; count: number; name: string }> = {};
 
+    // Build all package data in memory first
+    const packagesToUpsert: Array<{
+      packageCode: string;
+      name: string;
+      locationCode: string;
+      locationName: string;
+      price: number;
+      retailPrice: number;
+      currencyCode: string;
+      volume: number;
+      duration: number;
+      activeType: string;
+      description?: string;
+    }> = [];
+
     for (const pkg of packages) {
       const wholesaleCents = apiPriceToCents(pkg.price);
       const retailCents = Math.round(wholesaleCents * (1 + MARKUP_PERCENTAGE / 100));
@@ -338,7 +366,7 @@ export const syncPackages = action({
         ? pkg.locationCode
         : pkg.locationCode.toUpperCase();
 
-      await ctx.runMutation(internal.packages.upsertPackage, {
+      packagesToUpsert.push({
         packageCode: pkg.packageCode,
         name: pkg.name,
         locationCode: normalizedCode,
@@ -367,9 +395,20 @@ export const syncPackages = action({
       }
     }
 
+    // Build all country data
+    const countriesToUpsert: Array<{
+      code: string;
+      name: string;
+      region: string;
+      flagEmoji: string;
+      minPrice?: number;
+      packageCount?: number;
+      popular?: boolean;
+    }> = [];
+
     for (const [code, data] of Object.entries(countryPrices)) {
       const countryInfo = getCountryInfo(code, data.name);
-      await ctx.runMutation(internal.packages.upsertCountry, {
+      countriesToUpsert.push({
         code,
         name: countryInfo.name,
         region: countryInfo.region,
@@ -380,6 +419,26 @@ export const syncPackages = action({
       });
     }
 
-    return { synced: packages.length, countries: Object.keys(countryPrices).length };
+    // Batch upsert packages (chunked to avoid limits)
+    const packageChunks = chunkArray(packagesToUpsert, BATCH_SIZE);
+    for (const chunk of packageChunks) {
+      await ctx.runMutation(internal.packages.upsertPackagesBatch, {
+        packages: chunk,
+      });
+    }
+
+    // Batch upsert countries (usually fits in one batch)
+    const countryChunks = chunkArray(countriesToUpsert, BATCH_SIZE);
+    for (const chunk of countryChunks) {
+      await ctx.runMutation(internal.packages.upsertCountriesBatch, {
+        countries: chunk,
+      });
+    }
+
+    return {
+      synced: packages.length,
+      countries: Object.keys(countryPrices).length,
+      mutationCalls: packageChunks.length + countryChunks.length,
+    };
   },
 });
