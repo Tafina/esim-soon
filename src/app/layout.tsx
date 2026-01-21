@@ -20,12 +20,12 @@ const montserratDisplay = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Simlak - Instant eSIM for Global Travel",
-  description: "Get instant 5G mobile data in 200+ countries. No physical SIM needed. Activate in seconds and stay connected anywhere.",
+  title: "Simlak - Stay connected everywhere",
+  description: "Coming Soon. Get instant 5G mobile data in 200+ countries. No physical SIM needed. Activate in seconds and stay connected anywhere.",
   keywords: ["eSIM", "travel", "mobile data", "international roaming", "travel SIM", "5G", "global connectivity"],
   openGraph: {
-    title: "Simlak - Instant eSIM for Global Travel",
-    description: "Get instant 5G mobile data in 200+ countries. No physical SIM needed.",
+    title: "Simlak - Stay connected everywhere",
+    description: "Coming Soon. Get instant 5G mobile data in 200+ countries. No physical SIM needed. Activate in seconds and stay connected anywhere.",
     type: "website",
   },
 };

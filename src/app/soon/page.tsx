@@ -339,7 +339,7 @@ export default function ComingSoonPage() {
               &copy; {new Date().getFullYear()} Simlak. All rights reserved.
             </p>
 
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <a
                 href="#"
                 className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[var(--simlak-orange)]/30 transition-all"
@@ -358,7 +358,7 @@ export default function ComingSoonPage() {
               >
                 <Linkedin className="w-4 h-4" />
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </footer>
