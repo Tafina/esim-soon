@@ -186,6 +186,12 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Hide navbar on certain pages
+  const hideNavbarPaths = ["/terms", "/privacy"];
+  if (hideNavbarPaths.includes(pathname)) {
+    return null;
+  }
+
   return (
     <>
       <nav

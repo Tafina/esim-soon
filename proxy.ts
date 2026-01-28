@@ -7,6 +7,7 @@ const isAllowedRoute = createRouteMatcher([
   '/api(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/admin(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
@@ -16,7 +17,8 @@ export default clerkMiddleware(async (auth, request) => {
   if (
     pathname.startsWith('/_next') ||
     pathname === '/favicon.ico' ||
-    pathname.includes('.')
+    pathname.includes('.') ||
+    pathname.startsWith('/terms')
   ) {
     return NextResponse.next();
   }
