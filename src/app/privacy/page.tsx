@@ -303,7 +303,7 @@ export default function PrivacyPage() {
             </p>
 
             <p className="text-sm text-muted-foreground">
-              Last updated: January 2025
+              Last updated: January 2026
             </p>
           </div>
         </div>
