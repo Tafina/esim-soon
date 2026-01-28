@@ -86,7 +86,7 @@ const faqs = [
     questions: [
       {
         q: "What payment methods do you accept?",
-        a: "We accept all major credit cards (Visa, Mastercard, American Express), debit cards, and Apple Pay/Google Pay through our secure Stripe payment system.",
+        a: "We accept all major credit cards (Visa, Mastercard, American Express), debit cards, and Apple Pay/Google Pay through our secure payment system.",
       },
       {
         q: "Can I get a refund?",
@@ -94,7 +94,7 @@ const faqs = [
       },
       {
         q: "Is my payment information secure?",
-        a: "Absolutely. We use Stripe for payment processing with 256-bit SSL encryption. We never store your full card details on our servers.",
+        a: "Absolutely. We use a secure payment processing with 256-bit SSL encryption. We never store your full card details on our servers.",
       },
     ],
   },

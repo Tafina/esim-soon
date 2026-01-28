@@ -103,7 +103,7 @@ const sections: Section[] = [
       {
         type: "list",
         items: [
-          "Payment processors (Stripe) for secure transactions",
+          "Payment processors for secure transactions",
           "eSIM network providers to fulfill your orders",
           "Email service providers for communications",
           "Analytics providers to improve our services",
