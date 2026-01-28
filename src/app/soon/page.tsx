@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import {
-  Wifi,
   Mail,
-  ArrowRight,
   Check,
   Globe2,
   Zap,
@@ -15,10 +13,6 @@ import {
   Sparkles,
   Clock,
   Bell,
-  Send,
-  Twitter,
-  Instagram,
-  Linkedin,
 } from "lucide-react";
 
 export default function ComingSoonPage() {
@@ -86,13 +80,13 @@ export default function ComingSoonPage() {
   ];
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden flex flex-col">
       {/* ============================================
           HERO SECTION
           ============================================ */}
       <section
         ref={heroRef}
-        className="relative min-h-screen flex flex-col justify-center py-20"
+        className="relative flex-1 flex flex-col justify-center py-12"
       >
         {/* Subtle grid texture */}
         <div className="absolute inset-0 opacity-[0.03]">
@@ -339,26 +333,26 @@ export default function ComingSoonPage() {
               &copy; {new Date().getFullYear()} Simlak. All rights reserved.
             </p>
 
-            {/* <div className="flex items-center gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[var(--simlak-orange)]/30 transition-all"
+            <div className="flex items-center gap-6">
+              <Link
+                href="/terms"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[var(--simlak-orange)]/30 transition-all"
+                Terms of Service
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[var(--simlak-orange)]/30 transition-all"
+                Privacy Policy
+              </Link>
+              <Link
+                href="/refund"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Linkedin className="w-4 h-4" />
-              </a>
-            </div> */}
+                Refund Policy
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

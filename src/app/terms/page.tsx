@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   FileText,
   Shield,
@@ -9,7 +8,6 @@ import {
   Mail,
   AlertCircle,
   CheckCircle2,
-  ArrowRight,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -324,10 +322,13 @@ export default function TermsPage() {
           <div className="max-w-4xl mx-auto">
             {/* Introduction */}
             <div className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8">
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 Welcome to Simlak. These Terms of Service (&quot;Terms&quot;) govern your use of our website,
                 mobile applications, and eSIM services (collectively, the &quot;Services&quot;). By accessing
                 or using our Services, you agree to be bound by these Terms. Please read them carefully.
+              </p>
+              <p className="text-muted-foreground">
+                <span className="font-semibold text-foreground">Legal Entity:</span> These Terms constitute a legally binding agreement between you and Simlak (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;).
               </p>
             </div>
 

@@ -187,7 +187,7 @@ export function Navbar() {
   }, []);
 
   // Hide navbar on certain pages
-  const hideNavbarPaths = ["/terms", "/privacy"];
+  const hideNavbarPaths = ["/terms", "/privacy", "/refund"];
   if (hideNavbarPaths.includes(pathname)) {
     return null;
   }
